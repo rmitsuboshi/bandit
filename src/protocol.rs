@@ -8,9 +8,7 @@ pub fn run<P, E>(mut player: P, mut environment: E, horizon: usize)
 {
     for t in 1..=horizon {
         let arm = player.choose(t);
-        println!("arm {arm}");
         let loss = environment.reveal(arm);
-        println!("loss {loss}");
         player.update(arm, loss);
     }
 
