@@ -65,6 +65,11 @@ impl Player for Etc {
     fn update(&mut self, arm: usize, loss: f64) {
         self.losses[arm] += loss;
     }
+
+
+    fn cumulative_loss(&self) -> f64 {
+        self.losses.iter().sum()
+    }
 }
 
 pub(self) fn argmax(losses: &[f64]) -> usize {

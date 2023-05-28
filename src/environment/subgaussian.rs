@@ -54,6 +54,13 @@ impl SubGaussianBuilder {
     }
 
 
+    /// Set the subgaussian parameter.
+    pub fn sigma(mut self, sigma: f64) -> Self {
+        self.sigma = sigma;
+        self
+    }
+
+
     /// Builds [`SubGaussian`](SubGaussian)
     pub fn build(self) -> SubGaussian {
         let mut rng = StdRng::seed_from_u64(self.seed);
@@ -91,5 +98,15 @@ impl Environment for SubGaussian {
             .sample(&mut self.rng)
             .max(0.0)
             .min(1.0)
+    }
+
+
+    fn best_arm(&self) -> usize {
+        self.distributions.iter()
+            .enumerate()
+            .max_by(|(_, p), (_, q)|
+                p.mean().partial_cmp(&q.mean()).unwrap()
+            )
+            .unwrap().0
     }
 }

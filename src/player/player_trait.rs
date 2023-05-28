@@ -8,4 +8,11 @@ pub trait Player {
 
     /// Update the state.
     fn update(&mut self, arm: usize, loss: f64);
+
+
+    /// Returns the total loss value.
+    fn cumulative_loss(&self) -> f64;
 }
+
+
+
