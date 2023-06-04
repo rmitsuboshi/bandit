@@ -14,7 +14,7 @@ One can reproduce the following result by `cargo test -- --nocapture` command.
 ## How To Use
 Write the following line to `Cargo.toml`.
 ```toml
-bandit = { version = "0.1.0" }
+bandit = { git = "https://github.com/rmitsuboshi/bandit" }
 ```
 
 You can find code examples in `tests/small-tests.rs`.
