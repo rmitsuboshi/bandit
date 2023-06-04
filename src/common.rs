@@ -1,13 +1,13 @@
-/// `ArmInfo` stores some information used in UCB.
+/// `Arm` stores some information used in UCB.
 #[derive(Debug, Clone)]
-pub struct ArmInfo {
+pub struct Arm {
     cumulative_reward: f64,
     pull_count: u64,
 }
 
 
-impl ArmInfo {
-    /// Constructs a new instance of `ArmInfo`.
+impl Arm {
+    /// Constructs a new instance of `Arm`.
     pub fn new() -> Self {
         Self { cumulative_reward: 0.0, pull_count: 0 }
     }
@@ -61,3 +61,86 @@ impl ArmInfo {
         self.pull_count += 1;
     }
 }
+
+
+/// A struct that represents an arm set.
+#[derive(Debug, Clone)]
+pub struct Arms {
+    arms: Vec<Arm>,
+}
+
+
+impl Arms {
+    /// Construct a new instance of `Arms`.
+    pub fn new(n_arms: usize) -> Self {
+        let arms = vec![Arm::new(); n_arms];
+        Self { arms }
+    }
+
+
+    /// Update the arm information.
+    pub fn update(&mut self, arm: usize, reward: f64) {
+        self.arms[arm].update(reward);
+    }
+
+
+    /// Returns `Some(arm)` if there exists an arm not pulled,
+    /// `None` otherwise.
+    pub fn not_pulled(&self) -> Option<usize> {
+        self.arms.iter().position(|arm| arm.not_pulled())
+    }
+
+
+    /// Returns an iterator of UCB values over arms.
+    pub fn ucb<'a>(&'a self, delta: f64) -> impl Iterator<Item=f64> + 'a {
+        self.arms.iter()
+            .map(move |arm| arm.ucb(delta))
+    }
+
+
+    /// Returns the cumulative reward of this arm.
+    pub fn cumulative_reward(&self) -> f64 {
+        self.arms.iter()
+            .map(|arm| arm.cumulative_reward())
+            .sum()
+    }
+
+
+
+    /// Returns the empirical mean of the arm reward.
+    pub fn empirical_means<'a>(&'a self) -> impl Iterator<Item=f64> + 'a {
+        self.arms.iter()
+            .map(|arm| arm.empirical_mean().unwrap())
+    }
+
+    /// Returns the number of arms.
+    pub fn len(&self) -> usize {
+        self.arms.len()
+    }
+
+
+    /// Prints the empirical mean reward for each arm.
+    pub fn summary(&self) {
+        let n_arms = self.arms.len();
+        let header = (0..n_arms).map(|k| format!(" {k: ^4} "))
+            .collect::<Vec<_>>()
+            .join("|");
+
+        let border = (0..n_arms).map(|_| "------")
+            .collect::<Vec<_>>()
+            .join("+");
+        let content = self.empirical_means()
+            .map(|mean| format!(" {mean: >1.2} "))
+            .collect::<Vec<_>>()
+            .join("|");
+        println!("+-----+{border}+");
+        println!("| ARM |{header}|");
+        println!("+-----+{border}+");
+        println!("| AVG |{content}|");
+        println!("+-----+{border}+");
+    }
+}
+
+
+
+

@@ -1,6 +1,6 @@
 //! The Upper-Confidence-Bound algorithm.
 use crate::player::Player;
-use crate::common::ArmInfo;
+use crate::common::Arms;
 
 
 /// A struct that builds `Ucb`.
@@ -33,7 +33,7 @@ impl UcbBuilder {
 
 /// The UCB algorithm.
 pub struct Ucb {
-    arms: Vec<ArmInfo>,
+    arms: Arms,
     confidence: f64,
 }
 
@@ -46,17 +46,25 @@ impl Ucb {
     ) -> Self
     {
         assert!(n_arms > 0);
-        let arms = (0..n_arms).map(|_| ArmInfo::new()).collect();
+        let arms = Arms::new(n_arms);
         Self { arms, confidence, }
     }
 }
 
 
 impl Player for Ucb {
+    fn name(&self) -> &str {
+        "UCB (Upper-Confidence-Bound)"
+    }
+
+
     fn choose(&self, _t: usize) -> usize {
+        if let Some(arm) = self.arms.not_pulled() {
+            return arm;
+        }
+
         let delta = 1.0 / self.confidence;
-        self.arms.iter()
-            .map(|arm| arm.ucb(delta))
+        self.arms.ucb(delta)
             .enumerate()
             .max_by(|(_, a), (_, b)| a.partial_cmp(&b).unwrap())
             .unwrap().0
@@ -64,13 +72,16 @@ impl Player for Ucb {
 
 
     fn update(&mut self, arm: usize, reward: f64) {
-        self.arms[arm].update(reward);
+        self.arms.update(arm, reward);
     }
 
 
     fn cumulative_reward(&self) -> f64 {
-        self.arms.iter()
-            .map(|arm| arm.cumulative_reward())
-            .sum()
+        self.arms.cumulative_reward()
+    }
+
+
+    fn arms(&self) -> &Arms {
+        &self.arms
     }
 }

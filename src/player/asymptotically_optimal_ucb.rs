@@ -1,6 +1,6 @@
 //! The Upper-Confidence-Bound algorithm.
 use crate::player::Player;
-use crate::common::ArmInfo;
+use crate::common::Arms;
 
 
 /// A struct that builds `AsymptoticallyOptimalUcb`.
@@ -25,7 +25,7 @@ impl AsymptoticallyOptimalUcbBuilder {
 
 /// The UCB algorithm.
 pub struct AsymptoticallyOptimalUcb {
-    arms: Vec<ArmInfo>,
+    arms: Arms,
 }
 
 
@@ -36,15 +36,20 @@ impl AsymptoticallyOptimalUcb {
     ) -> Self
     {
         assert!(n_arms > 0);
-        let arms = (0..n_arms).map(|_| ArmInfo::new()).collect();
+        let arms = Arms::new(n_arms);
         Self { arms, }
     }
 }
 
 
 impl Player for AsymptoticallyOptimalUcb {
+    fn name(&self) -> &str {
+        "Asymtotically Optimal UCB"
+    }
+
+
     fn choose(&self, t: usize) -> usize {
-        if let Some(arm) = self.arms.iter().position(|arm| arm.not_pulled()) {
+        if let Some(arm) = self.arms.not_pulled() {
             return arm;
         }
 
@@ -52,8 +57,7 @@ impl Player for AsymptoticallyOptimalUcb {
         let t = t as f64;
 
         let delta = 1_f64 + t * t.ln().powi(2);
-        self.arms.iter()
-            .map(|arm| arm.ucb(delta))
+        self.arms.ucb(delta)
             .enumerate()
             .max_by(|(_, a), (_, b)| a.partial_cmp(&b).unwrap())
             .unwrap().0
@@ -61,13 +65,16 @@ impl Player for AsymptoticallyOptimalUcb {
 
 
     fn update(&mut self, arm: usize, reward: f64) {
-        self.arms[arm].update(reward);
+        self.arms.update(arm, reward);
     }
 
 
     fn cumulative_reward(&self) -> f64 {
-        self.arms.iter()
-            .map(|arm| arm.cumulative_reward())
-            .sum()
+        self.arms.cumulative_reward()
+    }
+
+
+    fn arms(&self) -> &Arms {
+        &self.arms
     }
 }

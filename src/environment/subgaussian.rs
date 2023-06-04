@@ -89,6 +89,36 @@ impl SubGaussian {
     {
         Self { rng, distributions }
     }
+
+
+    /// Returns the mean value for each arm.
+    pub fn means(&self) -> Vec<f64> {
+        self.distributions.iter()
+            .map(|p| p.mean())
+            .collect()
+    }
+
+
+    /// Prints the arm information.
+    pub fn summary(&self) {
+        let n_arms = self.distributions.len();
+        let header = (0..n_arms).map(|k| format!(" {k: ^5} "))
+            .collect::<Vec<_>>()
+            .join("|");
+
+        let border = (0..n_arms).map(|_| "-------")
+            .collect::<Vec<_>>()
+            .join("+");
+        let means = self.means();
+        let content = means.iter().map(|m| format!(" {m: >1.3} "))
+            .collect::<Vec<_>>()
+            .join("|");
+        println!("+------+{border}+");
+        println!("| ARM  |{header}|");
+        println!("+------+{border}+");
+        println!("| MEAN |{content}|");
+        println!("+------+{border}+");
+    }
 }
 
 

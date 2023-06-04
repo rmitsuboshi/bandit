@@ -6,6 +6,11 @@ The algorithms in this crate are named
 based on [this book](https://tor-lattimore.com/downloads/book/book.pdf).
 
 
+# Test run
+One can reproduce the following result by `cargo test -- --nocapture` command.
+![demo image](img/demo.png)
+
+
 ## How To Use
 Write the following line to `Cargo.toml`.
 ```toml
@@ -23,8 +28,8 @@ Currently, the following algorithms are implemented.
 - Asymptotically Optimal UCB (Asymptotically Optimal Upper-Confidence-Bound),
 
 ### Adversarial Bandits
-Being prepared.
+- Exp3 (Exponential-weight algorithm for Exploration and Exploitation)
 
 
 ### Environments
-- Sub-gaussian environment,
+- Sub-Gaussian environment,

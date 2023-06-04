@@ -1,7 +1,7 @@
 //! The Explore-Then-Commit algorithm.
 use crate::player::Player;
 
-use crate::common::ArmInfo;
+use crate::common::Arms;
 
 
 /// A struct that builds `Etc`.
@@ -36,7 +36,7 @@ impl EtcBuilder {
 /// The ETC algorithm.
 pub struct Etc {
     m: usize,
-    arms: Vec<ArmInfo>,
+    arms: Arms,
 }
 
 
@@ -47,20 +47,24 @@ impl Etc {
         n_arms: usize
     ) -> Self
     {
-        let arms = (0..n_arms).map(|_| ArmInfo::new()).collect();
+        let arms = Arms::new(n_arms);
         Self { m, arms, }
     }
 }
 
 
 impl Player for Etc {
+    fn name(&self) -> &str {
+        "ETC (Explore-Then-Commit)"
+    }
+
+
     fn choose(&self, t: usize) -> usize {
         let n_arms = self.arms.len();
         if t < self.m * n_arms {
             t % n_arms
         } else {
-            self.arms.iter()
-                .map(|arm| arm.empirical_mean())
+            self.arms.empirical_means()
                 .enumerate()
                 .max_by(|(_, vi), (_, vj)| vi.partial_cmp(vj).unwrap())
                 .unwrap().0
@@ -69,13 +73,16 @@ impl Player for Etc {
 
 
     fn update(&mut self, arm: usize, reward: f64) {
-        self.arms[arm].update(reward);
+        self.arms.update(arm, reward);
     }
 
 
     fn cumulative_reward(&self) -> f64 {
-        self.arms.iter()
-            .map(|arm| arm.cumulative_reward())
-            .sum()
+        self.arms.cumulative_reward()
+    }
+
+
+    fn arms(&self) -> &Arms {
+        &self.arms
     }
 }

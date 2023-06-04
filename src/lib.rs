@@ -26,6 +26,10 @@ pub use player::{
 
     AsymptoticallyOptimalUcbBuilder,
     AsymptoticallyOptimalUcb,
+
+
+    Exp3Builder,
+    Exp3,
 };
 
 
