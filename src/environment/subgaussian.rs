@@ -1,4 +1,4 @@
-//! Defines A subgaussion environment.
+//! Defines a subgaussion environment.
 //! A distribution `D` is said to be `sigma`-subgaussian if for all `lambda`,
 //! ```tex
 //! \mathbb{E}_{X \sim D} [ \exp( lambda * X )]
