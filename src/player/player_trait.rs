@@ -11,7 +11,7 @@ pub trait Player {
 
 
     /// Returns the total loss value.
-    fn cumulative_loss(&self) -> f64;
+    fn cumulative_reward(&self) -> f64;
 }
 
 

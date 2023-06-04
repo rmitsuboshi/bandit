@@ -22,7 +22,7 @@ pub struct SubGaussianBuilder {
     // Seed
     seed: u64,
 
-    // The range of loss value.
+    // The range of reward value.
     range: Range<f64>,
 
 
@@ -40,7 +40,7 @@ impl SubGaussianBuilder {
     }
 
 
-    /// Reset the range of loss value.
+    /// Reset the range of reward value.
     pub fn range(mut self, r: Range<f64>) -> Self {
         self.range = r;
         self

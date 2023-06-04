@@ -10,12 +10,22 @@ pub mod environment;
 pub mod protocol;
 
 
+/// Provides some structs used in bandit algorithms.
+pub mod common;
+
+
 pub use player::Player;
 pub use environment::Environment;
 
 pub use player::{
     EtcBuilder,
     Etc,
+
+    UcbBuilder,
+    Ucb,
+
+    AsymptoticallyOptimalUcbBuilder,
+    AsymptoticallyOptimalUcb,
 };
 
 

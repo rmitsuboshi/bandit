@@ -1,6 +1,8 @@
 //! The Explore-Then-Commit algorithm.
 use crate::player::Player;
 
+use crate::common::ArmInfo;
+
 
 /// A struct that builds `Etc`.
 pub struct EtcBuilder {
@@ -34,8 +36,7 @@ impl EtcBuilder {
 /// The ETC algorithm.
 pub struct Etc {
     m: usize,
-    n_arms: usize,
-    losses: Vec<f64>,
+    arms: Vec<ArmInfo>,
 }
 
 
@@ -46,35 +47,35 @@ impl Etc {
         n_arms: usize
     ) -> Self
     {
-        let losses = vec![0.0; n_arms];
-        Self { m, n_arms, losses, }
+        let arms = (0..n_arms).map(|_| ArmInfo::new()).collect();
+        Self { m, arms, }
     }
 }
 
 
 impl Player for Etc {
     fn choose(&self, t: usize) -> usize {
-        if t < self.m * self.n_arms {
-            t % self.n_arms
+        let n_arms = self.arms.len();
+        if t < self.m * n_arms {
+            t % n_arms
         } else {
-            argmax(&self.losses)
+            self.arms.iter()
+                .map(|arm| arm.empirical_mean())
+                .enumerate()
+                .max_by(|(_, vi), (_, vj)| vi.partial_cmp(vj).unwrap())
+                .unwrap().0
         }
     }
 
 
-    fn update(&mut self, arm: usize, loss: f64) {
-        self.losses[arm] += loss;
+    fn update(&mut self, arm: usize, reward: f64) {
+        self.arms[arm].update(reward);
     }
 
 
-    fn cumulative_loss(&self) -> f64 {
-        self.losses.iter().sum()
+    fn cumulative_reward(&self) -> f64 {
+        self.arms.iter()
+            .map(|arm| arm.cumulative_reward())
+            .sum()
     }
-}
-
-pub(self) fn argmax(losses: &[f64]) -> usize {
-    losses.iter()
-        .enumerate()
-        .max_by(|(_, vi), (_, vj)| vi.partial_cmp(vj).unwrap())
-        .unwrap().0
 }
