@@ -24,7 +24,7 @@ impl UcbBuilder {
     }
 
 
-    /// Build a new instance of `Etc`.
+    /// Build a new instance of `Self`.
     pub fn build(self) -> Ucb {
         Ucb::new(self.n_arms, self.confidence)
     }
@@ -39,7 +39,7 @@ pub struct Ucb {
 
 
 impl Ucb {
-    /// Construct a new instance of `Etc`.
+    /// Construct a new instance of `Ucb`.
     pub(self) fn new(
         n_arms: usize,
         confidence: f64,

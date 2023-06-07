@@ -16,7 +16,7 @@ impl AsymptoticallyOptimalUcbBuilder {
     }
 
 
-    /// Build a new instance of `Etc`.
+    /// Build a new instance of `Self`.
     pub fn build(self) -> AsymptoticallyOptimalUcb {
         AsymptoticallyOptimalUcb::new(self.n_arms)
     }
@@ -30,7 +30,7 @@ pub struct AsymptoticallyOptimalUcb {
 
 
 impl AsymptoticallyOptimalUcb {
-    /// Construct a new instance of `Etc`.
+    /// Construct a new instance of `Self`.
     pub(self) fn new(
         n_arms: usize,
     ) -> Self

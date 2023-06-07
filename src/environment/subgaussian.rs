@@ -104,20 +104,26 @@ impl SubGaussian {
         let n_arms = self.distributions.len();
         let header = (0..n_arms).map(|k| format!(" {k: ^5} "))
             .collect::<Vec<_>>()
-            .join("|");
+            .join("│");
 
-        let border = (0..n_arms).map(|_| "-------")
+        let toprule = (0..n_arms).map(|_| "───────")
             .collect::<Vec<_>>()
-            .join("+");
+            .join("┬");
+        let midrule = (0..n_arms).map(|_| "───────")
+            .collect::<Vec<_>>()
+            .join("┼");
+        let botrule = (0..n_arms).map(|_| "───────")
+            .collect::<Vec<_>>()
+            .join("┴");
         let means = self.means();
         let content = means.iter().map(|m| format!(" {m: >1.3} "))
             .collect::<Vec<_>>()
-            .join("|");
-        println!("+------+{border}+");
-        println!("| ARM  |{header}|");
-        println!("+------+{border}+");
-        println!("| MEAN |{content}|");
-        println!("+------+{border}+");
+            .join("│");
+        println!("┌──────┬{toprule}┐");
+        println!("│ ARM  │{header:}│");
+        println!("├──────┼{midrule}┤");
+        println!("│ MEAN │{content}│");
+        println!("└──────┴{botrule}┘");
     }
 }
 

@@ -9,15 +9,15 @@ use rand::distributions::{Distribution, Uniform};
 use std::cell::RefCell;
 
 
-/// A struct that builds `Exp3`.
-pub struct Exp3Builder {
+/// A struct that builds `Exp3Ix`.
+pub struct Exp3IxBuilder {
     seed: u64,
     n_arms: usize,
     horizon: usize,
 }
 
 
-impl Exp3Builder {
+impl Exp3IxBuilder {
     /// Construct a new instance of `Self`.
     pub fn new(n_arms: usize) -> Self {
         let seed = 1234;
@@ -41,14 +41,14 @@ impl Exp3Builder {
 
 
     /// Build a new instance of `Self`.
-    pub fn build(self) -> Exp3 {
-        Exp3::new(self.seed, self.n_arms, self.horizon)
+    pub fn build(self) -> Exp3Ix {
+        Exp3Ix::new(self.seed, self.n_arms, self.horizon)
     }
 }
 
 
 /// The UCB algorithm.
-pub struct Exp3 {
+pub struct Exp3Ix {
     arms: Arms,
     rng: RefCell<StdRng>,
     distribution: Uniform<f64>,
@@ -59,8 +59,8 @@ pub struct Exp3 {
 }
 
 
-impl Exp3 {
-    /// Construct a new instance of `Exp3`.
+impl Exp3Ix {
+    /// Construct a new instance of `Exp3Ix`.
     pub(self) fn new(
         seed: u64,
         n_arms: usize,
@@ -92,9 +92,9 @@ impl Exp3 {
 }
 
 
-impl Player for Exp3 {
+impl Player for Exp3Ix {
     fn name(&self) -> &str {
-        "Exp3"
+        "Exp3-IX"
     }
 
 
