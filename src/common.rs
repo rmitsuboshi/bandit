@@ -124,26 +124,26 @@ impl Arms {
         let n_arms = self.arms.len();
         let header = (0..n_arms).map(|k| format!(" {k: ^5} "))
             .collect::<Vec<_>>()
-            .join("│");
+            .join("┃");
 
         let content = self.empirical_means()
             .map(|mean| format!(" {mean: >1.3} "))
             .collect::<Vec<_>>()
-            .join("│");
-        let toprule = (0..n_arms).map(|_| "───────")
+            .join("┃");
+        let toprule = (0..n_arms).map(|_| "━━━━━━━")
             .collect::<Vec<_>>()
-            .join("┬");
-        let midrule = (0..n_arms).map(|_| "───────")
+            .join("┳");
+        let midrule = (0..n_arms).map(|_| "━━━━━━━")
             .collect::<Vec<_>>()
-            .join("┼");
-        let botrule = (0..n_arms).map(|_| "───────")
+            .join("╋");
+        let botrule = (0..n_arms).map(|_| "━━━━━━━")
             .collect::<Vec<_>>()
-            .join("┴");
-        println!("┌─────┬{toprule}┐");
-        println!("│ ARM │{header:}│");
-        println!("├─────┼{midrule}│");
-        println!("│ AVG │{content}│");
-        println!("└─────┴{botrule}┘");
+            .join("┻");
+        println!("┏━━━━━┳{toprule}┓");
+        println!("┃ ARM ┃{header:}┃");
+        println!("┣━━━━━╋{midrule}┫");
+        println!("┃ AVG ┃{content}┃");
+        println!("┗━━━━━┻{botrule}┛");
     }
 }
 

@@ -19,16 +19,16 @@ pub fn run<P, E>(mut player: P, mut environment: E, horizon: usize)
     let cumulative_reward = player.cumulative_reward();
     let next_arm = player.choose(horizon+1);
 
-    let header = format!("Result for    {name: >WIDTH$}");
-    println!("┌──────────────{:─<WIDTH$}┐", "");
-    println!("│{header}│");
-    println!("├─────────────┬{:─<WIDTH$}┤", "");
+    let header = format!("Algorithm    │{name: >WIDTH$}");
+    println!("┏━━━━━━━━━━━━━┯{:━<WIDTH$}┓", "");
+    println!("┃{header}┃");
+    println!("┣━━━━━━━━━━━━━┿{:━<WIDTH$}┫", "");
     let line = format!("Total Reward │{cumulative_reward: >WIDTH$}");
-    println!("│{line: <WIDTH$}│");
-    println!("├─────────────┼{:─<WIDTH$}┤", "");
-    let line = format!("Est.    arm  │{next_arm: >WIDTH$}");
-    println!("│{line: <WIDTH$}│");
-    println!("└─────────────┴{:─<WIDTH$}┘", "");
+    println!("┃{line: <WIDTH$}┃");
+    println!("┠─────────────┼{:─<WIDTH$}┨", "");
+    let line = format!("Est. arm     │{next_arm: >WIDTH$}");
+    println!("┃{line: <WIDTH$}┃");
+    println!("┗━━━━━━━━━━━━━┷{:━<WIDTH$}┛", "");
 
 
     player.arms().summary();
