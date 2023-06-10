@@ -1,16 +1,16 @@
 // -----
 // Problem setting
 const HORIZON: usize = 100_000;
-const N_ARMS: usize = 5;
+const N_ARMS: usize = 10;
 // -----
 // A parameter for ETC algorithm.
-const PULL_EACH_ARM: usize = 100;
+const PULL_EACH_ARM: usize = 50;
 // -----
 // The randomness for player.
 const PLAYER_SEED: u64 = 111_111;
 // -----
 // Environment parameters.
-const ENV_SEED: u64 = 123_456;
+const ENV_SEED: u64 = 123_456_789;
 // Sub-gaussian constant.
 const SIGMA: f64 = 1.0;
 // -----
@@ -35,7 +35,9 @@ mod stochastic_bandits {
             .seed(ENV_SEED)
             .build();
 
+        println!("ENVIRONMENT STATS");
         env.summary();
+        println!("\n");
     }
 
 

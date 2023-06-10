@@ -26,7 +26,7 @@ pub fn run<P, E>(mut player: P, mut environment: E, horizon: usize)
     let line = format!("Total Reward │{cumulative_reward: >WIDTH$}");
     println!("┃{line: <WIDTH$}┃");
     println!("┠─────────────┼{:─<WIDTH$}┨", "");
-    let line = format!("Est. arm     │{next_arm: >WIDTH$}");
+    let line = format!("Next arm     │{next_arm: >WIDTH$}");
     println!("┃{line: <WIDTH$}┃");
     println!("┗━━━━━━━━━━━━━┷{:━<WIDTH$}┛", "");
 
