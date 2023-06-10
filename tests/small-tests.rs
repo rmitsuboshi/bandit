@@ -1,6 +1,7 @@
 const HORIZON: usize = 100_000;
 const N_ARMS: usize = 20;
-const SEED: u64 = 123_456;
+const PLAYER_SEED: u64 = 111_111;
+const ENV_SEED: u64 = 123_456;
 const SIGMA: f64 = 1.0;
 
 #[cfg(test)]
@@ -20,7 +21,7 @@ mod stochastic_bandits {
         let env = SubGaussianBuilder::new(N_ARMS)
             .range(0.0..1.0)
             .sigma(SIGMA)
-            .seed(SEED)
+            .seed(ENV_SEED)
             .build();
 
         env.summary();
@@ -36,7 +37,7 @@ mod stochastic_bandits {
         let env = SubGaussianBuilder::new(N_ARMS)
             .range(0.0..1.0)
             .sigma(SIGMA)
-            .seed(SEED)
+            .seed(ENV_SEED)
             .build();
 
         run(etc, env, HORIZON);
@@ -52,7 +53,7 @@ mod stochastic_bandits {
         let env = SubGaussianBuilder::new(N_ARMS)
             .range(0.0..1.0)
             .sigma(SIGMA)
-            .seed(SEED)
+            .seed(ENV_SEED)
             .build();
 
 
@@ -67,7 +68,7 @@ mod stochastic_bandits {
         let env = SubGaussianBuilder::new(N_ARMS)
             .range(0.0..1.0)
             .sigma(SIGMA)
-            .seed(SEED)
+            .seed(ENV_SEED)
             .build();
 
 
@@ -79,27 +80,64 @@ mod stochastic_bandits {
 mod adversarial_bandits {
     use bandit::{
         Exp3Builder,
+        Exp3IxBuilder,
         SubGaussianBuilder,
         run,
     };
-
     use super::*;
 
     #[test]
     fn exp3() {
-        let seed = 111_111;
         let exp3 = Exp3Builder::new(N_ARMS)
-            .seed(seed)
+            .seed(PLAYER_SEED)
             .horizon(HORIZON)
             .build();
 
         let env = SubGaussianBuilder::new(N_ARMS)
             .range(0.0..1.0)
             .sigma(SIGMA)
-            .seed(SEED)
+            .seed(ENV_SEED)
             .build();
 
 
         run(exp3, env, HORIZON);
+    }
+
+
+    #[test]
+    fn exp3ix_noconfidence() {
+        let exp3ix = Exp3IxBuilder::new(N_ARMS)
+            .seed(PLAYER_SEED)
+            .horizon(HORIZON)
+            .build();
+
+        let env = SubGaussianBuilder::new(N_ARMS)
+            .range(0.0..1.0)
+            .sigma(SIGMA)
+            .seed(ENV_SEED)
+            .build();
+
+
+        run(exp3ix, env, HORIZON);
+    }
+
+
+    #[test]
+    fn exp3ix_confidence() {
+        let delta = 0.01;
+        let exp3ix = Exp3IxBuilder::new(N_ARMS)
+            .seed(PLAYER_SEED)
+            .confidence(delta)
+            .horizon(HORIZON)
+            .build();
+
+        let env = SubGaussianBuilder::new(N_ARMS)
+            .range(0.0..1.0)
+            .sigma(SIGMA)
+            .seed(ENV_SEED)
+            .build();
+
+
+        run(exp3ix, env, HORIZON);
     }
 }

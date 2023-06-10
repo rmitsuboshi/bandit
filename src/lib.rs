@@ -30,6 +30,10 @@ pub use player::{
 
     Exp3Builder,
     Exp3,
+
+
+    Exp3IxBuilder,
+    Exp3Ix,
 };
 
 
