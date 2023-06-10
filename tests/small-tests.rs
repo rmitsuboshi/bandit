@@ -1,8 +1,19 @@
+// -----
+// Problem setting
 const HORIZON: usize = 100_000;
-const N_ARMS: usize = 20;
+const N_ARMS: usize = 5;
+// -----
+// A parameter for ETC algorithm.
+const PULL_EACH_ARM: usize = 100;
+// -----
+// The randomness for player.
 const PLAYER_SEED: u64 = 111_111;
+// -----
+// Environment parameters.
 const ENV_SEED: u64 = 123_456;
+// Sub-gaussian constant.
 const SIGMA: f64 = 1.0;
+// -----
 
 #[cfg(test)]
 mod stochastic_bandits {
@@ -17,7 +28,7 @@ mod stochastic_bandits {
 
 
     #[test]
-    fn print_environment() {
+    fn print_subgaussian_environment() {
         let env = SubGaussianBuilder::new(N_ARMS)
             .range(0.0..1.0)
             .sigma(SIGMA)
@@ -31,7 +42,7 @@ mod stochastic_bandits {
     #[test]
     fn etc() {
         let etc = EtcBuilder::new(N_ARMS)
-            .pull_each_arm(100)
+            .pull_each_arm(PULL_EACH_ARM)
             .build();
 
         let env = SubGaussianBuilder::new(N_ARMS)
@@ -79,9 +90,11 @@ mod stochastic_bandits {
 
 mod adversarial_bandits {
     use bandit::{
+        EtcBuilder,
         Exp3Builder,
         Exp3IxBuilder,
         SubGaussianBuilder,
+        EtcAdversaryBuilder,
         run,
     };
     use super::*;
@@ -137,6 +150,35 @@ mod adversarial_bandits {
             .seed(ENV_SEED)
             .build();
 
+
+        run(exp3ix, env, HORIZON);
+    }
+
+
+    #[test]
+    fn etc_vs_etc_adversarial_environment() {
+        let etc = EtcBuilder::new(N_ARMS)
+            .pull_each_arm(PULL_EACH_ARM)
+            .build();
+
+        let env = EtcAdversaryBuilder::new(N_ARMS, PULL_EACH_ARM)
+            .build();
+
+        run(etc, env, HORIZON);
+    }
+
+
+    #[test]
+    fn exp3ix_vs_etc_adversarial_environment() {
+        let delta = 0.01;
+        let exp3ix = Exp3IxBuilder::new(N_ARMS)
+            .seed(PLAYER_SEED)
+            .confidence(delta)
+            .horizon(HORIZON)
+            .build();
+
+        let env = EtcAdversaryBuilder::new(N_ARMS, PULL_EACH_ARM)
+            .build();
 
         run(exp3ix, env, HORIZON);
     }

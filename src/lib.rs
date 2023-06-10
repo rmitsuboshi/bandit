@@ -40,6 +40,9 @@ pub use player::{
 pub use environment::{
     SubGaussianBuilder,
     SubGaussian,
+
+    EtcAdversaryBuilder,
+    EtcAdversary,
 };
 
 

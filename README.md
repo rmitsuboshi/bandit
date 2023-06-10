@@ -35,3 +35,4 @@ Currently, the following algorithms are implemented.
 
 ### Environments
 - Sub-Gaussian environment,
+- A worst-case environment for the ETC algorithm.
