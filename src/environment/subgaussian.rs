@@ -132,8 +132,6 @@ impl Environment for SubGaussian {
     fn reveal(&mut self, arm: usize) -> f64 {
         self.distributions[arm]
             .sample(&mut self.rng)
-            .max(0.0)
-            .min(1.0)
     }
 
 

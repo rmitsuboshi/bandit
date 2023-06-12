@@ -127,7 +127,11 @@ impl Arms {
             .join("┃");
 
         let content = self.empirical_means()
-            .map(|mean| format!(" {mean: >1.3} "))
+            .map(|mean| {
+                let sgn = if mean >= 0.0 { ' ' } else { '-' };
+                let mean = mean.abs();
+                format!(" {sgn}{mean: >1.3}")
+            })
             .collect::<Vec<_>>()
             .join("┃");
         let toprule = (0..n_arms).map(|_| "━━━━━━━")
